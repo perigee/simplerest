@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
+	"os"
 )
 
 func main() {
@@ -12,9 +13,15 @@ func main() {
 	router.HandleFunc("/", Index)
 	router.HandleFunc("/todos", TodoIndex)
 	router.HandleFunc("/todos/{todoId}", TodoShow)
+	router.HandleFunc("/info", Info)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 
+}
+
+func Info(w http.ResponseWriter, r *http.Request) {
+        hostname, _ := os.Hostname()
+	fmt.Fprintln(w, hostname")
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
