@@ -14,6 +14,7 @@ func main() {
 	router.HandleFunc("/todos", TodoIndex)
 	router.HandleFunc("/todos/{todoId}", TodoShow)
 	router.HandleFunc("/info", Info)
+	router.HandleFunc("/infohost", Info)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 
