@@ -8,7 +8,6 @@ script:
   - docker build -t perigee/simplerest .
 
 after_succes:
-  - if ["$TRAVIS_BRANCH" == "master"]; then
-    docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USER" -p="$DOCKER_PWD";
-    docker push perigee/simplerest;
-    fi
+  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USER" -p="$DOCKER_PWD";
+  - docker push perigee/simplerest:testing;
+    
