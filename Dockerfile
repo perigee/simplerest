@@ -1,5 +1,10 @@
 FROM golang:1.7-alpine
 
+ARG proxy
+ENV http_proxy $proxy
+ENV https_proxy $proxy
+
+
 ENV PRJNAME simplerest
 ENV PRJPATH /go/src/github.com/perigee/$PRJNAME
 COPY . $PRJPATH
