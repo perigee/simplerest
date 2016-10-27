@@ -21,7 +21,7 @@ func main() {
 
 func Info(w http.ResponseWriter, r *http.Request) {
         hostname, _ := os.Hostname()
-	fmt.Fprintln(w, hostname")
+	fmt.Fprintln(w, hostname)
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
