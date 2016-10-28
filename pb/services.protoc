@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package pb;
+
+service Provision {
+	rpc GetStatus (StatusReq) returns (StatusResp) {}
+	rpc Add (AddReq) retruns (AddResp) {}
+	rpc Remove (RemoveReq) returns (RemoveResp) {}
+}
+
+
+message StatusReq {
+	string project_id = 1;
+}
+
+message StatusResp {
+	string project_id = 1;
+	string status = 2;
+}
+
+message Add 
