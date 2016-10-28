@@ -4,10 +4,9 @@ package pb;
 
 service Provision {
 	rpc GetStatus (StatusReq) returns (StatusResp) {}
-	rpc Add (AddReq) retruns (AddResp) {}
-	rpc Remove (RemoveReq) returns (RemoveResp) {}
+	rpc Apply (ApplyReq) retruns (ApplyResp) {}
+	rpc Destroy (ApplyReq) retruns (ApplyResp) {}
 }
-
 
 message StatusReq {
 	string project_id = 1;
@@ -18,4 +17,8 @@ message StatusResp {
 	string status = 2;
 }
 
-message Add 
+message ApplyReq {
+	string project_id = 1;
+	string giturl     = 2;
+	boolean isdestroy = 3;
+}
