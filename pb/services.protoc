@@ -2,8 +2,16 @@ syntax = "proto3";
 
 package pb;
 
+// github.com/grpc-ecosystem/grpc-gateway
+import "go" 
+
 service Provision {
-	rpc GetStatus (StatusReq) returns (StatusResp) {}
+	rpc Status (StatusReq) returns (StatusResp) {
+	    option (google.api.http) = {
+	    	   get: "/v1/status"
+		   body: "*"
+	    };
+	}
 	rpc Apply (ApplyReq) retruns (ApplyResp) {}
 	rpc Destroy (ApplyReq) retruns (ApplyResp) {}
 }
