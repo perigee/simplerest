@@ -5,11 +5,11 @@ services:
   - docker
 
 script:
-  - docker build -t perigee/simplerest .
+  - docker build -t perigee/terrant .
 
 after_script:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
     docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USER" -p="$DOCKER_PWD";
-    docker push perigee/simplerest;
+    docker push perigee/terrant;
     fi
     
