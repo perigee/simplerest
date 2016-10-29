@@ -3,17 +3,17 @@ syntax = "proto3";
 package pb;
 
 // github.com/grpc-ecosystem/grpc-gateway
-import "go" 
+// import "go" 
 
 service Provision {
 	rpc Status (StatusReq) returns (StatusResp) {
-	    option (google.api.http) = {
-	    	   get: "/v1/status"
-		   body: "*"
-	    };
+	    //option (google.api.http) = {
+	    //	   get: "/v1/status"
+	    //	   body: "*"
+	    //};
 	}
-	rpc Apply (ApplyReq) retruns (ApplyResp) {}
-	rpc Destroy (ApplyReq) retruns (ApplyResp) {}
+	rpc Apply (ApplyReq) returns (ApplyResp) {}
+	rpc Destroy (ApplyReq) returns (ApplyResp) {}
 }
 
 message StatusReq {
@@ -28,5 +28,9 @@ message StatusResp {
 message ApplyReq {
 	string project_id = 1;
 	string giturl     = 2;
-	boolean isdestroy = 3;
+	bool destroy = 3;
+}
+
+message ApplyResp {
+	string project_id = 1;
 }
