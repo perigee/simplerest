@@ -21,8 +21,6 @@ type server struct {}
 
 
 
-
-
 func (s *server) Destroy(ctx context.Context, in *pd.ApplyReq) (*pb.ApplyResp, error) {
 
      
