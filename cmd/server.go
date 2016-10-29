@@ -6,7 +6,7 @@ import (
 
        "golang.org/x/net/context"
        "google.golang.org/grpc"
-       pb "github.com/perigee/terrant/pb/service"
+       pb "github.com/perigee/terrant/pb"
        "github.com/hashicorp/terraform/config"
        "github.com/hashicorp/terraform/terraform"
 )
@@ -21,19 +21,19 @@ type server struct {}
 
 
 
-func (s *server) Destroy(ctx context.Context, in *pd.ApplyReq) (*pb.ApplyResp, error) {
+func (s *server) Destroy(ctx context.Context, in *pb.ApplyReq) (*pb.ApplyResp, error) {
 
      
      
-     return &pb.ApplyResp{Message: "Applying " + in.ProjectId}, nil
+     return &pb.ApplyResp{ProjectId: "Applying " + in.ProjectId}, nil
 }
 
 
-func (s *server) Apply(ctx context.Context, in *pd.ApplyReq) (*pb.ApplyResp, error) {
+func (s *server) Apply(ctx context.Context, in *pb.ApplyReq) (*pb.ApplyResp, error) {
 
    
      
-     return &pb.ApplyResp{Message: "Applying " + in.ProjectId}, nil
+     return &pb.ApplyResp{ProjectId: "Applying " + in.ProjectId}, nil
 }
 
 

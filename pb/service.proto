@@ -6,23 +6,8 @@ package pb;
 // import "go" 
 
 service Provision {
-	rpc Status (StatusReq) returns (StatusResp) {
-	    //option (google.api.http) = {
-	    //	   get: "/v1/status"
-	    //	   body: "*"
-	    //};
-	}
 	rpc Apply (ApplyReq) returns (ApplyResp) {}
 	rpc Destroy (ApplyReq) returns (ApplyResp) {}
-}
-
-message StatusReq {
-	string project_id = 1;
-}
-
-message StatusResp {
-	string project_id = 1;
-	string status = 2;
 }
 
 message ApplyReq {
