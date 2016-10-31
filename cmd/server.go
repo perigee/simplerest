@@ -3,6 +3,9 @@ package main
 import (
        "log"
        "net"
+       "sort"
+       "strings"
+       "os"
 
        "golang.org/x/net/context"
        "google.golang.org/grpc"
@@ -19,6 +22,17 @@ const (
 
 type server struct {}
 
+ 
+type ApplyCommand struct {
+     Meta
+     Destroy bool
+     ShudownCh <-chan struct{}
+}
+
+
+func (c *ApplyCommand) Run() string {
+     
+}
 
 
 func (s *server) Destroy(ctx context.Context, in *pb.ApplyReq) (*pb.ApplyResp, error) {
