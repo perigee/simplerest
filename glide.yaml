@@ -1,0 +1,16 @@
+package: github.com/perigee/terrant
+import:
+- package: github.com/goadesign/goa
+  vcs: git
+  version: master
+  subpackages:
+  - client
+  - design
+  - design/apidsl
+  - dslengine
+  - goagen
+  - middleware
+- package: golang.org/x/tools
+  subpackages:
+  - go/ast/astutil
+- package: gopkg.in/yaml.v2
