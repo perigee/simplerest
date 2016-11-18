@@ -11,4 +11,5 @@ build:
 	docker build --build-arg proxy=$(http_proxy) -t simpleservice/testing .
 
 gen:
+	rm -f main.go
 	goagen bootstrap -d github.com/perigee/terrant/design	
