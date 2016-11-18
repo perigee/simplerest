@@ -22,9 +22,6 @@ var _ = Resource("resource", func() {
 		Params(func() {
 			Param("resourceID", String, "Resource ID")
 		})
-		Response("OK", func() {
-			Description("Return in case of creation")
-			Status(201)
-		})
+		Response(OK, "text/plain")
 	})
 })

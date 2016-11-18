@@ -75,8 +75,8 @@ func CreateResourceOK(t goatest.TInterface, ctx context.Context, service *goa.Se
 	if err != nil {
 		t.Fatalf("controller returned %s, logs:\n%s", err, logBuf.String())
 	}
-	if rw.Code != 201 {
-		t.Errorf("invalid response status code: got %+v, expected 201", rw.Code)
+	if rw.Code != 200 {
+		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
 	}
 
 	// Return results

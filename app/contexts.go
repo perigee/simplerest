@@ -41,8 +41,10 @@ func NewCreateResourceContext(ctx context.Context, service *goa.Service) (*Creat
 	return &rctx, err
 }
 
-// OK sends a HTTP response with status code 201.
-func (ctx *CreateResourceContext) OK() error {
-	ctx.ResponseData.WriteHeader(201)
-	return nil
+// OK sends a HTTP response with status code 200.
+func (ctx *CreateResourceContext) OK(resp []byte) error {
+	ctx.ResponseData.Header().Set("Content-Type", "text/plain")
+	ctx.ResponseData.WriteHeader(200)
+	_, err := ctx.ResponseData.Write(resp)
+	return err
 }

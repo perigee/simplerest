@@ -18,8 +18,8 @@ paths:
         required: true
         type: string
       responses:
-        "201":
-          description: Return in case of creation
+        "200":
+          description: OK
       schemes:
       - http
       summary: create resource
