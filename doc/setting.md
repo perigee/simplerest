@@ -27,4 +27,7 @@ Create the container with environment variables setting
 
 
 
+## Dependencies
+
+- github.com/fsouza/go-dockerclient
 
