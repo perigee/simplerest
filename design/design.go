@@ -28,4 +28,3 @@ var _ = Resource("resource", func() {
 		})
 	})
 })
-
