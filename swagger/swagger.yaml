@@ -1,7 +1,7 @@
 basePath: /infra
 consumes:
 - application/json
-host: localhost:8080
+host: localhost:8090
 info:
   description: A teaser for goa
   title: The adder API

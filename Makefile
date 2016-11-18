@@ -9,3 +9,6 @@ fmt: ## format the source code
 
 build:
 	docker build --build-arg proxy=$(http_proxy) -t simpleservice/testing .
+
+gen:
+	goagen bootstrap -d github.com/perigee/terrant/design	

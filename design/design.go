@@ -8,7 +8,7 @@ import (
 var _ = API("infra", func() {
         Title("The adder API")
         Description("A teaser for goa")
-        Host("localhost:8080")
+        Host("localhost:8090")
         Scheme("http")
 	BasePath("/infra")
 	Consumes("application/json")
