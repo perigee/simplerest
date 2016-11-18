@@ -1,0 +1,32 @@
+basePath: /infra
+consumes:
+- application/json
+host: localhost:8080
+info:
+  description: A teaser for goa
+  title: The adder API
+  version: ""
+paths:
+  /resource/{resourceID}:
+    post:
+      description: create resource by its ID
+      operationId: resource#create
+      parameters:
+      - description: Resource ID
+        in: path
+        name: resourceID
+        required: true
+        type: string
+      responses:
+        "201":
+          description: Return in case of creation
+      schemes:
+      - http
+      summary: create resource
+      tags:
+      - resource
+produces:
+- application/json
+schemes:
+- http
+swagger: "2.0"
