@@ -1,13 +1,9 @@
 package main
 
 import (
-
-	"bytes"
-       
 	"github.com/goadesign/goa"
 	"github.com/perigee/terrant/app"
 	"github.com/fsouza/go-dockerclient"
-	
 	
 )
 
@@ -39,23 +35,26 @@ func (c *ResourceController) Create(ctx *app.CreateResourceContext) error {
 	   panic(err)
 	}
 
-
+	
 	go func(id string) {
 
-	   containers, err := client.ListContainers(docker.ListContainersOptions{All: false})
+	   //containers, err := client.ListContainers(docker.ListContainersOptions{All: false})
 
+
+	   config := new(docker.Config)
+	   config.Image = id
+	   
+	   container, err := client.CreateContainer(docker.CreateContainerOptions{Name:"haha", Config: config}) 
+	   
 	   if err != nil {
 	      panic(err)
 	   }
 
-	   var buffer bytes.Buffer
-	   
-	   for _, cont := range containers {
-	      buffer.WriteString(cont.ID)
-	      buffer.WriteString("---")
+	   if err := client.StartContainer(container.ID, new(docker.HostConfig)); err  != nil {
+	      panic(err)
 	   }
 
-	   ch <- buffer.String()
+	   ch <- container.ID
 
 	}(id)
 
