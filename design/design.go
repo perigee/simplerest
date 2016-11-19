@@ -1,15 +1,15 @@
 package design
 
 import (
-        . "github.com/goadesign/goa/design"
-        . "github.com/goadesign/goa/design/apidsl"
+	. "github.com/goadesign/goa/design"
+	. "github.com/goadesign/goa/design/apidsl"
 )
 
 var _ = API("infra", func() {
-        Title("The adder API")
-        Description("A teaser for goa")
-        Host("localhost:8090")
-        Scheme("http")
+	Title("The adder API")
+	Description("A teaser for goa")
+	Host("localhost:8090")
+	Scheme("http")
 	BasePath("/infra")
 	Consumes("application/json")
 	Produces("application/json")

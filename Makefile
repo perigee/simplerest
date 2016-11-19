@@ -1,4 +1,6 @@
 .PHONY: all
+GOFMT_FILES?=$$(find . -name '*.go' | grep -v vendor)
+
 
 get:
 	go get -d -u ./...
