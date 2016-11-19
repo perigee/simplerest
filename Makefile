@@ -1,5 +1,8 @@
 .PHONY: all
 
+get:
+	go get -d -u ./...
+
 pre: ## fetch the dependencies
 	@go get -u github.com/goadesign/goa/...
 	@curl https://glide.sh/get | sh
