@@ -18,3 +18,6 @@ build:
 gen:
 	rm -f main.go
 	goagen bootstrap -d github.com/perigee/terrant/design	
+
+docker:
+	docker build --build-arg proxy=$(http_proxy) -t perigee/terrant .
