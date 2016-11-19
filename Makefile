@@ -20,4 +20,4 @@ gen:
 	goagen bootstrap -d github.com/perigee/terrant/design	
 
 docker:
-	docker build --build-arg proxy=$(http_proxy) -t perigee/terrant .
+	docker build --build-arg proxy=$(http_proxy) -t perigee/terrant:dev -f Dockerfile_dev .
