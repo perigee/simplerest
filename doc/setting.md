@@ -50,7 +50,7 @@ ResourceID
 ## TODO list
 
 1. launch the docker container with all parameters
-2. parser yml file
+2. parser yml file - using HCL package to parser the variables (variables file)
 
 ### CRUD API
 1. resource: GET
