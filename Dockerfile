@@ -1,19 +1,17 @@
-FROM golang:1.7-alpine
+FROM golang:1.7.3-wheezy
 
 ARG proxy
 ENV http_proxy $proxy
 ENV https_proxy $proxy
 
 
-ENV PRJNAME simplerest
+ENV PRJNAME terrant
 ENV PRJPATH /go/src/github.com/perigee/$PRJNAME
 COPY . $PRJPATH
 
 WORKDIR $PRJPATH
-RUN mkdir -p $PRJPATH \
-    && apk add --update --no-cache git openssl \
-    && go get && go install
+RUN go install
 
-EXPOSE 8080
+EXPOSE 8090
 
-ENTRYPOINT ["/go/bin/simplerest"]
+ENTRYPOINT ["./$PRJPATH/infra"]
