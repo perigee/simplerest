@@ -31,3 +31,26 @@ Create the container with environment variables setting
 
 - github.com/fsouza/go-dockerclient
 
+
+
+## Parameters
+
+
+### From gateway
+SpaceID
+RequestID
+
+
+### Self tracking IDs
+StackID
+ResourceID
+
+
+
+## TODO list
+
+1. launch the docker container with all parameters
+2. parser yml file
+
+### CRUD API
+1. resource: GET
