@@ -6,6 +6,9 @@ import (
 	"github.com/perigee/terrant/app"
 )
 
+
+const Endpoint string = "unix:///var/run/docker.sock"
+
 // ResourceController implements the resource resource.
 type ResourceController struct {
 	*goa.Controller
@@ -24,9 +27,8 @@ func (c *ResourceController) Create(ctx *app.CreateResourceContext) error {
 	id := ctx.ResourceID
 
 	ch := make(chan string)
-	endpoint := "unix:///var/run/docker.sock"
 
-	client, err := docker.NewClient(endpoint)
+	client, err := docker.NewClient(Endpoint)
 
 	if err != nil {
 		panic(err)
