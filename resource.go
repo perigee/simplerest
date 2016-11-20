@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
@@ -51,10 +52,17 @@ func (c *ResourceController) Create(ctx *app.CreateResourceContext) error {
 
 		//https://raw.githubusercontent.com/controlroom/lincoln/ce70a73a8a8b627bd755e9bb0a24a2502e7844ba/backends/docker/container.go
 
+		_, err := client.ImagePull(ctx, "nginx", types.ImagePullOptions{All: false})
+
+		if err != nil {
+			panic(err)
+
+		}
+
 		container, err := client.ContainerCreate(ctx, getContainerConfig(id), getHostConfig(), getNetworkingConfig(), "haha")
 
 		if err != nil {
-		   panic(err)
+			panic(err)
 		}
 
 		ch <- container.ID

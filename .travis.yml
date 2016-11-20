@@ -5,6 +5,7 @@ services:
   - docker
 
 script:
+  - make build
   - docker build -t perigee/terrant .
 
 after_script:
