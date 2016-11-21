@@ -1,6 +1,6 @@
 .PHONY: all
 GOFMT_FILES?=$$(find . -name '*.go' | grep -v vendor)
-
+.DEFAULT_GOAL := run
 
 get:
 	go get -d -u ./...
@@ -15,6 +15,8 @@ fmt: ## format the source code
 build:
 	go build -o infra
 
+run: build
+	./infra
 gen:
 	rm -f main.go
 	goagen bootstrap -d github.com/perigee/terrant/design	
