@@ -54,3 +54,9 @@ ResourceID
 
 ### CRUD API
 1. resource: GET
+
+
+## References
+
+- A repo using docker client github.com/controlroom/lincoln/backends/docker/container.go
+

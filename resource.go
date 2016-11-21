@@ -50,8 +50,6 @@ func (c *ResourceController) Create(ctx *app.CreateResourceContext) error {
 
 	go func(id string) {
 
-		//https://raw.githubusercontent.com/controlroom/lincoln/ce70a73a8a8b627bd755e9bb0a24a2502e7844ba/backends/docker/container.go
-
 		_, err := client.ImagePull(ctx, "nginx", types.ImagePullOptions{All: false})
 
 		if err != nil {
