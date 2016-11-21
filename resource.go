@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/network"
@@ -40,29 +42,49 @@ func (c *ResourceController) Create(ctx *app.CreateResourceContext) error {
 	// Put your logic here
 	id := ctx.ResourceID
 
-	ch := make(chan string)
-
 	client, err := client.NewEnvClient()
 
 	if err != nil {
 		panic(err)
 	}
 
-	go func(id string) error {
+	defer client.Close()
 
-		_, err := client.ImagePull(ctx, "nginx", types.ImagePullOptions{All: false})
+	ch := make(chan string)
+
+	go func(id string) {
+
+		//matches, _ := client.ImageList(ctx, types.ImageListOptions{
+		//	MatchName: id,
+		//})
+
+		//if len(matches) == 0 || strings.HasSuffix(id, "latest") {
+		result, _ := client.ImageSearch(ctx, id, types.ImageSearchOptions{})
+
+		//logger := Logger(ctx) // logger is a log15.Logger
+		//logger.Warn("whoops", "value", 15)
+		if len(result) == 0 {
+			fmt.Printf("========================== NO IMAGE")
+		}
+		resp, err := client.ImageCreate(ctx, "ubuntu:16.04", types.ImageCreateOptions{})
+		defer resp.Close()
+
+		//}
 
 		if err != nil {
-			if err == IsErrImageNotFound(err)
-				
+			fmt.Printf("========================== NO IMAGE in imagepull")
 			panic(err)
 		}
 
-		defer client.Close()
-
-		container, err := client.ContainerCreate(ctx, getContainerConfig(id), getHostConfig(), getNetworkingConfig(), "haha")
+		container, err := client.ContainerCreate(ctx, getContainerConfig(id), getHostConfig(),
+			getNetworkingConfig(), "")
 
 		if err != nil {
+			fmt.Printf("========================== NO IMAGE in container")
+			panic(err)
+		}
+
+		if err := client.ContainerStart(ctx, container.ID, types.ContainerStartOptions{}); err != nil {
 			panic(err)
 		}
 
