@@ -9,6 +9,7 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/goadesign/goa"
 	"github.com/perigee/terrant/app"
+	"golang.org/x/net/context"
 )
 
 // ResourceController implements the resource resource.
@@ -54,22 +55,23 @@ func (c *ResourceController) Create(ctx *app.CreateResourceContext) error {
 
 	go func(id string) {
 
-		//matches, _ := client.ImageList(ctx, types.ImageListOptions{
-		//	MatchName: id,
-		//})
-
 		//if len(matches) == 0 || strings.HasSuffix(id, "latest") {
-		result, _ := client.ImageSearch(ctx, id, types.ImageSearchOptions{})
 
-		//logger := Logger(ctx) // logger is a log15.Logger
-		//logger.Warn("whoops", "value", 15)
-		if len(result) == 0 {
-			fmt.Printf("========================== NO IMAGE")
-		}
-		resp, err := client.ImageCreate(ctx, "ubuntu:16.04", types.ImageCreateOptions{})
+		fmt.Printf(client.ClientVersion())
+
+		resp, err := client.ImagePull(context.Background(), id, types.ImagePullOptions{})
+
 		defer resp.Close()
 
-		//}
+		if err != nil {
+
+			panic(err)
+
+		} else {
+			ch <- "not found"
+		}
+
+		return
 
 		if err != nil {
 			fmt.Printf("========================== NO IMAGE in imagepull")

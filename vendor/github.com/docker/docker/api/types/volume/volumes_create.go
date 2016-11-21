@@ -19,7 +19,7 @@ type VolumesCreateBody struct {
 	// Required: true
 	DriverOpts map[string]string `json:"DriverOpts"`
 
-	// User-defined key/value metadata.
+	// A mapping of arbitrary key/value data to set on the volume.
 	// Required: true
 	Labels map[string]string `json:"Labels"`
 
