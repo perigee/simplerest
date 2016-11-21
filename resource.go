@@ -48,14 +48,17 @@ func (c *ResourceController) Create(ctx *app.CreateResourceContext) error {
 		panic(err)
 	}
 
-	go func(id string) {
+	go func(id string) error {
 
 		_, err := client.ImagePull(ctx, "nginx", types.ImagePullOptions{All: false})
 
 		if err != nil {
+			if err == IsErrImageNotFound(err)
+				
 			panic(err)
-
 		}
+
+		defer client.Close()
 
 		container, err := client.ContainerCreate(ctx, getContainerConfig(id), getHostConfig(), getNetworkingConfig(), "haha")
 
