@@ -1,9 +1,10 @@
 package main
 
 import (
+	"io/ioutil"
+
 	"github.com/hashicorp/hcl"
 	"github.com/hashicorp/hcl/hcl/ast"
-	"io/ioutil"
 )
 
 func GetVaraiblesList(file *ast.File) ([]string, error) {
@@ -13,6 +14,7 @@ func GetVaraiblesList(file *ast.File) ([]string, error) {
 }
 
 func HCLmapper(filename string) (*ast.File, error) {
+
 	byteArray, err := ioutil.ReadFile(filename)
 
 	if err != nil {
