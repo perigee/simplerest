@@ -7,12 +7,14 @@ import (
 	"github.com/hashicorp/hcl/hcl/ast"
 )
 
+// GetVaraiblesList fetches the variable list
 func GetVaraiblesList(file *ast.File) ([]string, error) {
 	a := []string{"sef", "sdfe"}
 
 	return a, nil
 }
 
+// HCLmapper extracts the AST file of a given file
 func HCLmapper(filename string) (*ast.File, error) {
 
 	byteArray, err := ioutil.ReadFile(filename)

@@ -1,5 +1,5 @@
 //************************************************************************//
-// API "infra": Application Controllers
+// API "provisioner": Application Controllers
 //
 // Generated with goagen v1.0.0, command line:
 // $ goagen
@@ -29,14 +29,14 @@ func initService(service *goa.Service) {
 	service.Decoder.Register(goa.NewJSONDecoder, "*/*")
 }
 
-// ResourceController is the controller interface for the Resource actions.
-type ResourceController interface {
+// ChefController is the controller interface for the Chef actions.
+type ChefController interface {
 	goa.Muxer
-	Create(*CreateResourceContext) error
+	Create(*CreateChefContext) error
 }
 
-// MountResourceController "mounts" a Resource resource controller on the given service.
-func MountResourceController(service *goa.Service, ctrl ResourceController) {
+// MountChefController "mounts" a Chef resource controller on the given service.
+func MountChefController(service *goa.Service, ctrl ChefController) {
 	initService(service)
 	var h goa.Handler
 
@@ -46,12 +46,28 @@ func MountResourceController(service *goa.Service, ctrl ResourceController) {
 			return err
 		}
 		// Build the context
-		rctx, err := NewCreateResourceContext(ctx, service)
+		rctx, err := NewCreateChefContext(ctx, service)
 		if err != nil {
 			return err
 		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*ChefPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
 		return ctrl.Create(rctx)
 	}
-	service.Mux.Handle("POST", "/infra/resource/:resourceID", ctrl.MuxHandler("Create", h, nil))
-	service.LogInfo("mount", "ctrl", "Resource", "action", "Create", "route", "POST /infra/resource/:resourceID")
+	service.Mux.Handle("POST", "/provisioner/chef", ctrl.MuxHandler("Create", h, unmarshalCreateChefPayload))
+	service.LogInfo("mount", "ctrl", "Chef", "action", "Create", "route", "POST /provisioner/chef")
+}
+
+// unmarshalCreateChefPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateChefPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &chefPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
 }

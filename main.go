@@ -10,7 +10,7 @@ import (
 
 func main() {
 	// Create service
-	service := goa.New("infra")
+	service := goa.New("provisioner")
 
 	// Mount middleware
 	service.Use(middleware.RequestID())
@@ -18,12 +18,12 @@ func main() {
 	service.Use(middleware.ErrorHandler(service, true))
 	service.Use(middleware.Recover())
 
-	// Mount "resource" controller
-	c := NewResourceController(service)
-	app.MountResourceController(service, c)
+	// Mount "chef" controller
+	c := NewChefController(service)
+	app.MountChefController(service, c)
 
 	// Start service
-	if err := service.ListenAndServe(":8090"); err != nil {
+	if err := service.ListenAndServe(":3001"); err != nil {
 		service.LogError("startup", "err", err)
 	}
 }

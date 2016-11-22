@@ -1,5 +1,5 @@
 //************************************************************************//
-// API "infra": Application Resource Href Factories
+// API "provisioner": Application Resource Href Factories
 //
 // Generated with goagen v1.0.0, command line:
 // $ goagen

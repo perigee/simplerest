@@ -1,6 +1,6 @@
 .PHONY: all
 GOFMT_FILES?=$$(find . -name '*.go' | grep -v vendor)
-.DEFAULT_GOAL := run
+.DEFAULT_GOAL := build
 
 get:
 	go get -d -u ./...

@@ -5,23 +5,43 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
-var _ = API("infra", func() {
+// ChefPayload constructs request body
+var ChefPayload = Type("ChefPayload", func() {
+	Attribute("vm_uid", String, "kdielsie")
+	Attribute("nodeAttributes", String, "{docker: {name: dockername}}")
+	Attribute("runlist", ArrayOf(String))
+})
+
+var _ = API("provisioner", func() {
 	Title("The adder API")
 	Description("A teaser for goa")
-	Host("localhost:8090")
+	Host("localhost:3001")
 	Scheme("http")
-	BasePath("/infra")
+	BasePath("/provisioner")
 	Consumes("application/json")
 	Produces("application/json")
 })
 
-var _ = Resource("resource", func() {
+var _ = Resource("chef", func() {
 	Action("create", func() {
-		Routing(POST("/resource/:resourceID"))
-		Description("create resource by its ID")
-		Params(func() {
-			Param("resourceID", String, "Resource ID")
+		Routing(POST(""))
+		Payload(ChefPayload, func() {
+			Required("vm_uid", "runlist")
 		})
-		Response(OK, "text/plain")
+		Response(OK, "(^/[0-9]+")
+	})
+
+	Action("show", func() {
+		Routing(
+			GET("/:vm_uid"),
+		)
+		Description("Retrieve the status by VM ID")
+		Params(func() {
+			Param("vmID", String, "VM ID", func() {
+				Minimum(1)
+			})
+		})
+		Response(OK)
+		Response(NotFound)
 	})
 })

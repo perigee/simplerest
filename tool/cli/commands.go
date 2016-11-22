@@ -17,10 +17,10 @@ import (
 )
 
 type (
-	// CreateResourceCommand is the command line data structure for the create action of resource
-	CreateResourceCommand struct {
-		// Resource ID
-		ResourceID  string
+	// CreateChefCommand is the command line data structure for the create action of chef
+	CreateChefCommand struct {
+		Payload     string
+		ContentType string
 		PrettyPrint bool
 	}
 )
@@ -30,13 +30,26 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	var command, sub *cobra.Command
 	command = &cobra.Command{
 		Use:   "create",
-		Short: `create resource by its ID`,
-	}
-	tmp1 := new(CreateResourceCommand)
-	sub = &cobra.Command{
-		Use:   `resource ["/infra/resource/RESOURCEID"]`,
 		Short: ``,
-		RunE:  func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
+	}
+	tmp1 := new(CreateChefCommand)
+	sub = &cobra.Command{
+		Use:   `chef ["/provisioner/chef"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "nodeAttributes": "Ut eos non totam voluptatem.",
+   "runlist": [
+      "Distinctio dolores.",
+      "Distinctio dolores.",
+      "Distinctio dolores."
+   ],
+   "uid": "Illo ipsum qui."
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
 	tmp1.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp1.PrettyPrint, "pp", false, "Pretty print response body")
@@ -197,17 +210,24 @@ func boolArray(ins []string) ([]bool, error) {
 	return vals, nil
 }
 
-// Run makes the HTTP request corresponding to the CreateResourceCommand command.
-func (cmd *CreateResourceCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the CreateChefCommand command.
+func (cmd *CreateChefCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/infra/resource/%v", cmd.ResourceID)
+		path = "/provisioner/chef"
+	}
+	var payload client.ChefPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.CreateResource(ctx, path)
+	resp, err := c.CreateChef(ctx, path, &payload, cmd.ContentType)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -218,7 +238,7 @@ func (cmd *CreateResourceCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *CreateResourceCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var resourceID string
-	cc.Flags().StringVar(&cmd.ResourceID, "resourceID", resourceID, `Resource ID`)
+func (cmd *CreateChefCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 }

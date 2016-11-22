@@ -1,30 +1,58 @@
-basePath: /infra
+basePath: /provisioner
 consumes:
 - application/json
-host: localhost:8090
+definitions:
+  ChefPayload:
+    example:
+      nodeAttributes: Ut eos non totam voluptatem.
+      runlist:
+      - Distinctio dolores.
+      - Distinctio dolores.
+      - Distinctio dolores.
+      uid: Illo ipsum qui.
+    properties:
+      nodeAttributes:
+        description: '{docker: {name: dockername}}'
+        example: Ut eos non totam voluptatem.
+        type: string
+      runlist:
+        example:
+        - Distinctio dolores.
+        - Distinctio dolores.
+        - Distinctio dolores.
+        items:
+          example: Distinctio dolores.
+          type: string
+        type: array
+      uid:
+        description: kdielsie
+        example: Illo ipsum qui.
+        type: string
+    title: ChefPayload
+    type: object
+host: localhost:3001
 info:
   description: A teaser for goa
   title: The adder API
   version: ""
 paths:
-  /resource/{resourceID}:
+  /chef:
     post:
-      description: create resource by its ID
-      operationId: resource#create
+      operationId: chef#create
       parameters:
-      - description: Resource ID
-        in: path
-        name: resourceID
+      - in: body
+        name: payload
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/ChefPayload'
       responses:
         "200":
           description: OK
       schemes:
       - http
-      summary: create resource
+      summary: create chef
       tags:
-      - resource
+      - chef
 produces:
 - application/json
 schemes:

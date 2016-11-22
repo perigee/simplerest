@@ -1,5 +1,5 @@
 //************************************************************************//
-// API "infra": Application Media Types
+// API "provisioner": Application Media Types
 //
 // Generated with goagen v1.0.0, command line:
 // $ goagen

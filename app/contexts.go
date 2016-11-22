@@ -1,5 +1,5 @@
 //************************************************************************//
-// API "infra": Application Contexts
+// API "provisioner": Application Contexts
 //
 // Generated with goagen v1.0.0, command line:
 // $ goagen
@@ -17,33 +17,28 @@ import (
 	"golang.org/x/net/context"
 )
 
-// CreateResourceContext provides the resource create action context.
-type CreateResourceContext struct {
+// CreateChefContext provides the chef create action context.
+type CreateChefContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	ResourceID string
+	Payload *ChefPayload
 }
 
-// NewCreateResourceContext parses the incoming request URL and body, performs validations and creates the
-// context used by the resource controller create action.
-func NewCreateResourceContext(ctx context.Context, service *goa.Service) (*CreateResourceContext, error) {
+// NewCreateChefContext parses the incoming request URL and body, performs validations and creates the
+// context used by the chef controller create action.
+func NewCreateChefContext(ctx context.Context, service *goa.Service) (*CreateChefContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
-	rctx := CreateResourceContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramResourceID := req.Params["resourceID"]
-	if len(paramResourceID) > 0 {
-		rawResourceID := paramResourceID[0]
-		rctx.ResourceID = rawResourceID
-	}
+	rctx := CreateChefContext{Context: ctx, ResponseData: resp, RequestData: req}
 	return &rctx, err
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *CreateResourceContext) OK(resp []byte) error {
-	ctx.ResponseData.Header().Set("Content-Type", "text/plain")
+func (ctx *CreateChefContext) OK(resp []byte) error {
+	ctx.ResponseData.Header().Set("Content-Type", "(^/[0-9]+")
 	ctx.ResponseData.WriteHeader(200)
 	_, err := ctx.ResponseData.Write(resp)
 	return err
