@@ -59,4 +59,4 @@ ResourceID
 ## References
 
 - A repo using docker client github.com/controlroom/lincoln/backends/docker/container.go
-
+- Async web service golang http://marcio.io/2015/07/handling-1-million-requests-per-minute-with-golang/
