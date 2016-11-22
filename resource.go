@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"os"
+
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/network"
@@ -11,6 +13,23 @@ import (
 	"github.com/perigee/terrant/app"
 	"golang.org/x/net/context"
 )
+
+var (
+	MaxWorker = os.Getenv("MAX_WORKER")
+	MaxQueue  = os.Getenv("MAX_Queue")
+)
+
+type Job struct {
+	Payload Payload
+}
+
+type Worker struct {
+	WorkerPool  chan chan Job
+	JobChannnel chan Job
+	quit        chan bool
+}
+
+var JobQueue chan Job
 
 // ResourceController implements the resource resource.
 type ResourceController struct {
