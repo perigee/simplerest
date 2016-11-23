@@ -12,9 +12,12 @@ terraform.tfstate ()
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"strings"
 
 	"io/ioutil"
+
+	"bytes"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -29,8 +32,30 @@ const (
 	TerraformState = "infra.tf"
 )
 
+func downloadS3object(s3client *s3.S3, key string) ([]byte, error) {
+	res, err := s3client.GetObject(&s3.GetObjectInput{
+		Bucket: aws.String("autoterrarepostate"),
+		Key:    aws.String(key),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+
+	buf := bytes.NewBuffer(nil)
+
+	if _, err := io.Copy(buf, res.Body); err != nil {
+		return nil, err
+
+	}
+
+	return buf.Bytes(), nil
+}
+
 // FetchObject fetch the object
-func FetchObject(ctx *app.CreateChefContext) (*s3.GetObjectOutput, error) {
+func FetchObject(ctx *app.CreateChefContext) ([]byte, error) {
 
 	//
 	okey := make([]string, 3)
@@ -49,12 +74,7 @@ func FetchObject(ctx *app.CreateChefContext) (*s3.GetObjectOutput, error) {
 
 	svc := s3.New(sess, &aws.Config{Region: aws.String("us-east-1")})
 
-	params := &s3.GetObjectInput{
-		Bucket: aws.String("autoterrarepostate"),
-		Key:    aws.String(objectkey),
-	}
-
-	resp, err := svc.GetObject(params)
+	resp, err := downloadS3object(svc, objectkey)
 
 	if err != nil {
 		fmt.Println(err.Error())
