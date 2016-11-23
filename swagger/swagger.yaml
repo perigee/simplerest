@@ -35,8 +35,8 @@ definitions:
     type: object
 host: localhost:3001
 info:
-  description: A teaser for goa
-  title: The adder API
+  description: A provisioner for VM
+  title: Provisioner API
   version: ""
 paths:
   /chef:

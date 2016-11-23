@@ -17,9 +17,19 @@ build:
 
 run: build
 	./infra
+
+
 gen:
+	goagen app -d github.com/perigee/terrant/design
+	goagen swagger -d github.com/perigee/terrant/design
+	goagen schema -d github.com/perigee/terrant/design
+	goagen client -d github.com/perigee/terrant/design
+	goagen js -d github.com/perigee/terrant/design
+
+
+bootstrap:
 	rm -f main.go
-	goagen bootstrap -d github.com/perigee/terrant/design	
+	goagen bootstrap -d github.com/perigee/terrant/design
 
 docker:
 	docker build --build-arg proxy=$(http_proxy) -t perigee/terrant:dev -f Dockerfile_dev .

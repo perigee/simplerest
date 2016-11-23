@@ -1,7 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+
+	"io/ioutil"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -44,4 +47,21 @@ func FetchObject(spaceid string) (*s3.GetObjectOutput, error) {
 // UpdateTerraFile updates
 func UpdateTerraFile(s3obj *s3.GetObjectOutput) (*s3.GetObjectOutput, error) {
 	return nil, nil
+}
+
+// JSON2File creates the file based on given json
+func JSON2File(in, filename string) error {
+	rawIn := json.RawMessage(in)
+	bytes, err := rawIn.MarshalJSON()
+
+	if err != nil {
+		return err
+	}
+
+	ioutil.WriteFile(filename, bytes, 0777)
+
+	fmt.Println(bytes)
+
+	return nil
+
 }
