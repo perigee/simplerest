@@ -15,7 +15,7 @@ const (
 )
 
 // FetchObject fetch the object
-func FetchObject(spaceid string) error {
+func FetchObject(spaceid string) (*s3.GetObjectOutput, error) {
 	sess, err := session.NewSession()
 
 	if err != nil {
@@ -33,16 +33,15 @@ func FetchObject(spaceid string) error {
 
 	if err != nil {
 		fmt.Println(err.Error())
-		return err
+		return nil, err
 	}
 
 	fmt.Println(resp)
 
-	return nil
+	return resp, nil
 }
 
 // UpdateTerraFile updates
-func UpdateTerraFile(runlist string) error {
-
-	return nil
+func UpdateTerraFile(s3obj *s3.GetObjectOutput) (*s3.GetObjectOutput, error) {
+	return nil, nil
 }
