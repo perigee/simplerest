@@ -23,6 +23,14 @@ type (
 		ContentType string
 		PrettyPrint bool
 	}
+
+	// ShowChefCommand is the command line data structure for the show action of chef
+	ShowChefCommand struct {
+		Vmuid string
+		// VM ID
+		VMUID       string
+		PrettyPrint bool
+	}
 )
 
 // RegisterCommands registers the resource action CLI commands.
@@ -47,12 +55,26 @@ Payload example:
       "Distinctio dolores.",
       "Distinctio dolores."
    ],
-   "uid": "Illo ipsum qui."
+   "vmuid": "Illo ipsum qui."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
 	tmp1.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp1.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "show",
+		Short: `Retrieve the status by VM ID`,
+	}
+	tmp2 := new(ShowChefCommand)
+	sub = &cobra.Command{
+		Use:   `chef ["/provisioner/chef/VMUID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
+	}
+	tmp2.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp2.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 }
@@ -218,7 +240,7 @@ func (cmd *CreateChefCommand) Run(c *client.Client, args []string) error {
 	} else {
 		path = "/provisioner/chef"
 	}
-	var payload client.ChefPayload
+	var payload client.CreateChefPayload
 	if cmd.Payload != "" {
 		err := json.Unmarshal([]byte(cmd.Payload), &payload)
 		if err != nil {
@@ -241,4 +263,32 @@ func (cmd *CreateChefCommand) Run(c *client.Client, args []string) error {
 func (cmd *CreateChefCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
 	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+}
+
+// Run makes the HTTP request corresponding to the ShowChefCommand command.
+func (cmd *ShowChefCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/provisioner/chef/%v", cmd.Vmuid)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ShowChef(ctx, path, stringFlagVal("VMUID", cmd.VMUID))
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ShowChefCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var vmuid string
+	cc.Flags().StringVar(&cmd.Vmuid, "vmuid", vmuid, ``)
+	var vMUID string
+	cc.Flags().StringVar(&cmd.VMUID, "VMUID", vMUID, `VM ID`)
 }

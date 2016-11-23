@@ -33,6 +33,7 @@ func initService(service *goa.Service) {
 type ChefController interface {
 	goa.Muxer
 	Create(*CreateChefContext) error
+	Show(*ShowChefContext) error
 }
 
 // MountChefController "mounts" a Chef resource controller on the given service.
@@ -52,7 +53,7 @@ func MountChefController(service *goa.Service, ctrl ChefController) {
 		}
 		// Build the payload
 		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
-			rctx.Payload = rawPayload.(*ChefPayload)
+			rctx.Payload = rawPayload.(*CreateChefPayload)
 		} else {
 			return goa.MissingPayloadError()
 		}
@@ -60,12 +61,32 @@ func MountChefController(service *goa.Service, ctrl ChefController) {
 	}
 	service.Mux.Handle("POST", "/provisioner/chef", ctrl.MuxHandler("Create", h, unmarshalCreateChefPayload))
 	service.LogInfo("mount", "ctrl", "Chef", "action", "Create", "route", "POST /provisioner/chef")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowChefContext(ctx, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	service.Mux.Handle("GET", "/provisioner/chef/:vmuid", ctrl.MuxHandler("Show", h, nil))
+	service.LogInfo("mount", "ctrl", "Chef", "action", "Show", "route", "GET /provisioner/chef/:vmuid")
 }
 
 // unmarshalCreateChefPayload unmarshals the request body into the context request data Payload field.
 func unmarshalCreateChefPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
-	payload := &chefPayload{}
+	payload := &createChefPayload{}
 	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
 		return err
 	}
 	goa.ContextRequest(ctx).Payload = payload.Publicize()

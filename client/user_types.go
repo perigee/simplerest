@@ -18,7 +18,7 @@ type chefPayload struct {
 	NodeAttributes *string  `form:"nodeAttributes,omitempty" json:"nodeAttributes,omitempty" xml:"nodeAttributes,omitempty"`
 	Runlist        []string `form:"runlist,omitempty" json:"runlist,omitempty" xml:"runlist,omitempty"`
 	// kdielsie
-	UID *string `form:"uid,omitempty" json:"uid,omitempty" xml:"uid,omitempty"`
+	Vmuid *string `form:"vmuid,omitempty" json:"vmuid,omitempty" xml:"vmuid,omitempty"`
 }
 
 // Publicize creates ChefPayload from chefPayload
@@ -30,8 +30,8 @@ func (ut *chefPayload) Publicize() *ChefPayload {
 	if ut.Runlist != nil {
 		pub.Runlist = ut.Runlist
 	}
-	if ut.UID != nil {
-		pub.UID = ut.UID
+	if ut.Vmuid != nil {
+		pub.Vmuid = ut.Vmuid
 	}
 	return &pub
 }
@@ -42,5 +42,5 @@ type ChefPayload struct {
 	NodeAttributes *string  `form:"nodeAttributes,omitempty" json:"nodeAttributes,omitempty" xml:"nodeAttributes,omitempty"`
 	Runlist        []string `form:"runlist,omitempty" json:"runlist,omitempty" xml:"runlist,omitempty"`
 	// kdielsie
-	UID *string `form:"uid,omitempty" json:"uid,omitempty" xml:"uid,omitempty"`
+	Vmuid *string `form:"vmuid,omitempty" json:"vmuid,omitempty" xml:"vmuid,omitempty"`
 }

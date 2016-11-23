@@ -2,14 +2,14 @@ basePath: /provisioner
 consumes:
 - application/json
 definitions:
-  ChefPayload:
+  CreateChefPayload:
     example:
       nodeAttributes: Ut eos non totam voluptatem.
       runlist:
       - Distinctio dolores.
       - Distinctio dolores.
       - Distinctio dolores.
-      uid: Illo ipsum qui.
+      vmuid: Illo ipsum qui.
     properties:
       nodeAttributes:
         description: '{docker: {name: dockername}}'
@@ -24,11 +24,14 @@ definitions:
           example: Distinctio dolores.
           type: string
         type: array
-      uid:
+      vmuid:
         description: kdielsie
         example: Illo ipsum qui.
         type: string
-    title: ChefPayload
+    required:
+    - vmuid
+    - runlist
+    title: CreateChefPayload
     type: object
 host: localhost:3001
 info:
@@ -44,7 +47,7 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/ChefPayload'
+          $ref: '#/definitions/CreateChefPayload'
       responses:
         "200":
           description: OK
@@ -53,8 +56,37 @@ paths:
       summary: create chef
       tags:
       - chef
+  /chef/{vmuid}:
+    get:
+      description: Retrieve the status by VM ID
+      operationId: chef#show
+      parameters:
+      - description: VM ID
+        in: query
+        name: VMUID
+        required: false
+        type: string
+      - in: path
+        name: vmuid
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      schemes:
+      - http
+      summary: show chef
+      tags:
+      - chef
 produces:
 - application/json
+responses:
+  NotFound:
+    description: Not Found
+  OK:
+    description: OK
 schemes:
 - http
 swagger: "2.0"
