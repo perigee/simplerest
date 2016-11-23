@@ -49,6 +49,7 @@ func UpdateTerraFile(s3obj *s3.GetObjectOutput) (*s3.GetObjectOutput, error) {
 	return nil, nil
 }
 
+// UploadObject upload the object on s3
 func UploadObject() error {
 	return nil
 
