@@ -4,29 +4,25 @@ consumes:
 definitions:
   CreateChefPayload:
     example:
-      nodeAttributes: Ut eos non totam voluptatem.
+      nodeAttributes: 7.3604893e+18
       runlist:
-      - Distinctio dolores.
-      - Distinctio dolores.
-      - Distinctio dolores.
-      vmuid: Illo ipsum qui.
+      - Totam voluptatem voluptas aspernatur distinctio dolores recusandae.
+      vmuid: Ipsum qui nihil vel laboriosam odit.
     properties:
       nodeAttributes:
         description: '{docker: {name: dockername}}'
-        example: Ut eos non totam voluptatem.
-        type: string
+        example: 7.3604893e+18
+        type: any
       runlist:
         example:
-        - Distinctio dolores.
-        - Distinctio dolores.
-        - Distinctio dolores.
+        - Totam voluptatem voluptas aspernatur distinctio dolores recusandae.
         items:
-          example: Distinctio dolores.
+          example: Totam voluptatem voluptas aspernatur distinctio dolores recusandae.
           type: string
         type: array
       vmuid:
         description: kdielsie
-        example: Illo ipsum qui.
+        example: Ipsum qui nihil vel laboriosam odit.
         type: string
     required:
     - vmuid

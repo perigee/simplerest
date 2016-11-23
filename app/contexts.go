@@ -39,8 +39,8 @@ func NewCreateChefContext(ctx context.Context, service *goa.Service) (*CreateChe
 // createChefPayload is the chef create action payload.
 type createChefPayload struct {
 	// {docker: {name: dockername}}
-	NodeAttributes *string  `form:"nodeAttributes,omitempty" json:"nodeAttributes,omitempty" xml:"nodeAttributes,omitempty"`
-	Runlist        []string `form:"runlist,omitempty" json:"runlist,omitempty" xml:"runlist,omitempty"`
+	NodeAttributes *interface{} `form:"nodeAttributes,omitempty" json:"nodeAttributes,omitempty" xml:"nodeAttributes,omitempty"`
+	Runlist        []string     `form:"runlist,omitempty" json:"runlist,omitempty" xml:"runlist,omitempty"`
 	// kdielsie
 	Vmuid *string `form:"vmuid,omitempty" json:"vmuid,omitempty" xml:"vmuid,omitempty"`
 }
@@ -75,8 +75,8 @@ func (payload *createChefPayload) Publicize() *CreateChefPayload {
 // CreateChefPayload is the chef create action payload.
 type CreateChefPayload struct {
 	// {docker: {name: dockername}}
-	NodeAttributes *string  `form:"nodeAttributes,omitempty" json:"nodeAttributes,omitempty" xml:"nodeAttributes,omitempty"`
-	Runlist        []string `form:"runlist" json:"runlist" xml:"runlist"`
+	NodeAttributes *interface{} `form:"nodeAttributes,omitempty" json:"nodeAttributes,omitempty" xml:"nodeAttributes,omitempty"`
+	Runlist        []string     `form:"runlist" json:"runlist" xml:"runlist"`
 	// kdielsie
 	Vmuid string `form:"vmuid" json:"vmuid" xml:"vmuid"`
 }

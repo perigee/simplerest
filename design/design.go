@@ -10,7 +10,7 @@ const SPACEID = "ubispaceid"
 // ChefPayload constructs request body
 var ChefPayload = Type("ChefPayload", func() {
 	Attribute("vmuid", String, "kdielsie")
-	Attribute("nodeAttributes", String, "{docker: {name: dockername}}")
+	Attribute("nodeAttributes", Any, "{docker: {name: dockername}}")
 	Attribute("runlist", ArrayOf(String))
 })
 

@@ -49,19 +49,18 @@ func UpdateTerraFile(s3obj *s3.GetObjectOutput) (*s3.GetObjectOutput, error) {
 	return nil, nil
 }
 
-// JSON2File creates the file based on given json
-func JSON2File(in, filename string) error {
-	rawIn := json.RawMessage(in)
-	bytes, err := rawIn.MarshalJSON()
-
-	if err != nil {
-		return err
-	}
-
-	ioutil.WriteFile(filename, bytes, 0777)
-
-	fmt.Println(bytes)
-
+func UploadObject() error {
 	return nil
 
+}
+
+// JSON2File creates the file based on given json
+func JSON2File(in *interface{}, filename string) error {
+	jsonStr, err := json.Marshal(*in)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+	ioutil.WriteFile(filename, jsonStr, 0644)
+	return nil
 }

@@ -15,8 +15,8 @@ package app
 // chefPayload user type.
 type chefPayload struct {
 	// {docker: {name: dockername}}
-	NodeAttributes *string  `form:"nodeAttributes,omitempty" json:"nodeAttributes,omitempty" xml:"nodeAttributes,omitempty"`
-	Runlist        []string `form:"runlist,omitempty" json:"runlist,omitempty" xml:"runlist,omitempty"`
+	NodeAttributes *interface{} `form:"nodeAttributes,omitempty" json:"nodeAttributes,omitempty" xml:"nodeAttributes,omitempty"`
+	Runlist        []string     `form:"runlist,omitempty" json:"runlist,omitempty" xml:"runlist,omitempty"`
 	// kdielsie
 	Vmuid *string `form:"vmuid,omitempty" json:"vmuid,omitempty" xml:"vmuid,omitempty"`
 }
@@ -39,8 +39,8 @@ func (ut *chefPayload) Publicize() *ChefPayload {
 // ChefPayload user type.
 type ChefPayload struct {
 	// {docker: {name: dockername}}
-	NodeAttributes *string  `form:"nodeAttributes,omitempty" json:"nodeAttributes,omitempty" xml:"nodeAttributes,omitempty"`
-	Runlist        []string `form:"runlist,omitempty" json:"runlist,omitempty" xml:"runlist,omitempty"`
+	NodeAttributes *interface{} `form:"nodeAttributes,omitempty" json:"nodeAttributes,omitempty" xml:"nodeAttributes,omitempty"`
+	Runlist        []string     `form:"runlist,omitempty" json:"runlist,omitempty" xml:"runlist,omitempty"`
 	// kdielsie
 	Vmuid *string `form:"vmuid,omitempty" json:"vmuid,omitempty" xml:"vmuid,omitempty"`
 }

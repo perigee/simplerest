@@ -49,13 +49,11 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 Payload example:
 
 {
-   "nodeAttributes": "Ut eos non totam voluptatem.",
+   "nodeAttributes": 7360489274657118353,
    "runlist": [
-      "Distinctio dolores.",
-      "Distinctio dolores.",
-      "Distinctio dolores."
+      "Totam voluptatem voluptas aspernatur distinctio dolores recusandae."
    ],
-   "vmuid": "Illo ipsum qui."
+   "vmuid": "Ipsum qui nihil vel laboriosam odit."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
