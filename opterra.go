@@ -12,12 +12,15 @@ terraform.tfstate ()
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"io/ioutil"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/perigee/terrant/app"
+	"github.com/perigee/terrant/design"
 )
 
 const (
@@ -27,7 +30,17 @@ const (
 )
 
 // FetchObject fetch the object
-func FetchObject(spaceid string) (*s3.GetObjectOutput, error) {
+func FetchObject(ctx *app.CreateChefContext) (*s3.GetObjectOutput, error) {
+
+	//
+	okey := make([]string, 3)
+
+	okey[0] = ctx.Request.Header.Get(design.SPACEID)
+	okey[1] = ctx.Payload.Vmuid
+	okey[2] = "infra.tf"
+
+	objectkey := strings.Join(okey, "/")
+
 	sess, err := session.NewSession()
 
 	if err != nil {
@@ -38,7 +51,7 @@ func FetchObject(spaceid string) (*s3.GetObjectOutput, error) {
 
 	params := &s3.GetObjectInput{
 		Bucket: aws.String("autoterrarepostate"),
-		Key:    aws.String(spaceid),
+		Key:    aws.String(objectkey),
 	}
 
 	resp, err := svc.GetObject(params)

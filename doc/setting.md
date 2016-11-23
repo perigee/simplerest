@@ -61,3 +61,4 @@ ResourceID
 - A repo using docker client github.com/controlroom/lincoln/backends/docker/container.go
 - Async web service golang http://marcio.io/2015/07/handling-1-million-requests-per-minute-with-golang/
 - chan chan http://tleyden.github.io/blog/2013/11/23/understanding-chan-chans-in-go/
+- aws S3 http://eng.tapjoy.com/blog-list/abstracting-s3-for-fun-and-profit-in-go
