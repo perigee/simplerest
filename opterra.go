@@ -22,6 +22,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/jeffail/gabs"
 	"github.com/perigee/terrant/app"
 	"github.com/perigee/terrant/design"
 )
@@ -33,11 +34,6 @@ const (
 	terraStatusFile     = "resource.json"
 	terraAttributeFile  = "attributes.json"
 )
-
-type ResourceInfo struct {
-	ResourceID string `json:resourceId`
-	Status     string `json:status, string`
-}
 
 func downloadS3object(s3client *s3.S3, key string) ([]byte, error) {
 	res, err := s3client.GetObject(&s3.GetObjectInput{
@@ -109,38 +105,61 @@ func FetchObject(ctx *app.CreateChefContext) ([]byte, error) {
 		return nil, err
 	}*/
 
-	state, err := CheckJobStatus(svc, s3KeyGen(ctx, terraStatusFile))
+	resp, err := CheckJobStatus(ctx, svc, s3KeyGen(ctx, terraStatusFile))
 
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
 	}
 
-	return []byte(state), nil
+	if err := uploadS3object(svc, s3KeyGen(ctx, "jun_tmp_file"), []byte(resp)); err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
+	return []byte(resp), nil
 }
 
 // CheckJobStatus verifies the status of current resource
-func CheckJobStatus(s3client *s3.S3, key string) (string, error) {
-
-	var resinfo ResourceInfo
+func CheckJobStatus(ctx *app.CreateChefContext, s3client *s3.S3, key string) ([]byte, error) {
 
 	res, err := downloadS3object(s3client, key)
 
 	if err != nil {
 		fmt.Println(err.Error())
-		return "", nil
+		return nil, err
 	}
 
-	if err := json.Unmarshal(res, &resinfo); err != nil {
+	jsonObj, err := gabs.ParseJSON(res)
+
+	if err != nil {
 		fmt.Println(err.Error())
-		return "", nil
+		return nil, err
 	}
 
-	return resinfo.Status, nil
+	value, ok := jsonObj.Path("status").Data().(string)
+
+	jsonObj.SetP("Completed", "status")
+
+	// test upload modified file
+	jsonStr := jsonObj.String()
+
+	fmt.Println(jsonStr)
+
+	if err := uploadS3object(s3client, s3KeyGen(ctx, "jun_tmp_file.json"), []byte(jsonStr)); err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
+	if ok {
+		return []byte(value), nil
+	}
+
+	return []byte(""), nil
 }
 
 // UpdateTerraFile updates
-func UpdateTerraFile(s3obj *s3.GetObjectOutput) (*s3.GetObjectOutput, error) {
+func UpdateTerraFile(s3client *s3.S3, key string) ([]byte, error) {
 	return nil, nil
 }
 
