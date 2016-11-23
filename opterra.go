@@ -34,6 +34,11 @@ const (
 	terraAttributeFile  = "attributes.json"
 )
 
+type ResourceInfo struct {
+	ResourceID string `json:resourceId`
+	Status     string `json:status, string`
+}
+
 func downloadS3object(s3client *s3.S3, key string) ([]byte, error) {
 	res, err := s3client.GetObject(&s3.GetObjectInput{
 		Bucket: aws.String(terraBUCKETNAME),
@@ -91,6 +96,7 @@ func FetchObject(ctx *app.CreateChefContext) ([]byte, error) {
 
 	svc := s3.New(sess, &aws.Config{Region: aws.String(terraDEFAULTREGION)})
 
+	/*  ===== DOWNLOAD/UPLOAD Tesitng
 	resp, err := downloadS3object(svc, s3KeyGen(ctx, terraStatusFile))
 
 	if err != nil {
@@ -101,15 +107,36 @@ func FetchObject(ctx *app.CreateChefContext) ([]byte, error) {
 	if err := uploadS3object(svc, s3KeyGen(ctx, "jun_tmp_file"), resp); err != nil {
 		fmt.Println(err.Error())
 		return nil, err
+	}*/
+
+	state, err := CheckJobStatus(svc, s3KeyGen(ctx, terraStatusFile))
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
 	}
 
-	return resp, nil
+	return []byte(state), nil
 }
 
 // CheckJobStatus verifies the status of current resource
-func CheckJobStatus(ctx *app.CreateChefContext) (string, error) {
+func CheckJobStatus(s3client *s3.S3, key string) (string, error) {
 
-	return "", nil
+	var resinfo ResourceInfo
+
+	res, err := downloadS3object(s3client, key)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return "", nil
+	}
+
+	if err := json.Unmarshal(res, &resinfo); err != nil {
+		fmt.Println(err.Error())
+		return "", nil
+	}
+
+	return resinfo.Status, nil
 }
 
 // UpdateTerraFile updates
