@@ -1,5 +1,14 @@
 package main
 
+/*
+
+infra.tf
+payload.json (json description of vm)
+resource.json (status tracking)
+terraform.tfstate ()
+
+*/
+
 import (
 	"encoding/json"
 	"fmt"
@@ -56,6 +65,11 @@ func UploadObject() error {
 }
 
 // JSON2File creates the file based on given json
+/*
+    if err := JSON2File(ctx.Payload.NodeAttributes, "atrb.json"); err != nil {
+		panic(err)
+	}
+*/
 func JSON2File(in *interface{}, filename string) error {
 	jsonStr, err := json.Marshal(*in)
 	if err != nil {
