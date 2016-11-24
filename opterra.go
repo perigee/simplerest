@@ -25,7 +25,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/jeffail/gabs"
 	"github.com/perigee/terrant/app"
-	"github.com/perigee/terrant/design"
 )
 
 const (
@@ -34,6 +33,7 @@ const (
 	terraTerraformFile = "infra.tf"
 	terraStatusFile    = "resource.json"
 	terraAttributeFile = "attributes.json"
+	terraSPACEIDKEY    = "ubispaceid"
 )
 
 func downloadS3object(s3client *s3.S3, key string) ([]byte, error) {
@@ -77,7 +77,7 @@ func uploadS3object(s3client *s3.S3, key string, body []byte) error {
 func s3KeyGen(ctx *app.CreateChefContext, filename string) string {
 	okey := make([]string, 3)
 
-	okey[0] = ctx.Request.Header.Get(design.SPACEID)
+	okey[0] = ctx.Request.Header.Get(terraSPACEIDKEY)
 	okey[1] = ctx.Payload.Vmuid
 	okey[2] = filename
 	return strings.Join(okey, "/")
