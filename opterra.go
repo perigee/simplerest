@@ -83,15 +83,22 @@ func s3KeyGen(ctx *app.CreateChefContext, filename string) string {
 	return strings.Join(okey, "/")
 }
 
-// ChefCreateImp fetch the object
-func ChefCreateImp(ctx *app.CreateChefContext) ([]byte, error) {
+// CreateS3Client creates the client
+func CreateS3Client() *s3.S3 {
 	sess, err := session.NewSession()
 
 	if err != nil {
 		panic(err)
 	}
 
-	svc := s3.New(sess, &aws.Config{Region: aws.String(terraDEFAULTREGION)})
+	return s3.New(sess, &aws.Config{Region: aws.String(terraDEFAULTREGION)})
+
+}
+
+// ChefCreateImp fetch the object
+func ChefCreateImp(ctx *app.CreateChefContext) ([]byte, error) {
+
+	svc := CreateS3Client()
 
 	resp, err := UpdateTerraFile(ctx, svc)
 
@@ -164,8 +171,31 @@ func UpdateTerraFile(ctx *app.CreateChefContext, s3client *s3.S3) ([]byte, error
 	return []byte(jsonStr), nil
 }
 
-// UploadObject upload the object on s3
-func UploadObject() error {
+// UpdateContainerID updates the container id
+func UpdateContainerID(ctx *app.CreateChefContext, s3client *s3.S3, id string) error {
+
+	res, err := downloadS3object(s3client, s3KeyGen(ctx, terraStatusFile))
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	jsonObj, err := gabs.ParseJSON(res)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	jsonObj.SetP(id, "internal.containerId")
+	jsonStr := jsonObj.String()
+
+	if err := uploadS3object(s3client, s3KeyGen(ctx, "tmp_resource.json"), []byte(jsonStr)); err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
 	return nil
 }
 
