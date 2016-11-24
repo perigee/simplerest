@@ -7,7 +7,7 @@ import (
 
 func StartTerra(ctx *app.CreateChefContext) {
 
-	endpoint := "unix:///var/run/docker.sock"
+	endpoint := "http://127.0.0.1"
 
 	client, err := docker.NewClient(endpoint)
 

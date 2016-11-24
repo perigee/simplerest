@@ -24,7 +24,7 @@ func (c *ChefController) Create(ctx *app.CreateChefContext) error {
 
 	StartTerra(ctx)
 
-	//return ctx.OK([]byte(res))
+	return ctx.OK([]byte("Gotit"))
 
 	// ChefController_Create: end_implement
 	return nil
