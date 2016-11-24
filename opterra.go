@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"time"
 
 	"io/ioutil"
 
@@ -28,11 +29,11 @@ import (
 )
 
 const (
-	terraBUCKETNAME     = "autoterrarepostate"
-	terraDEFAULTREGION  = "us-east-1"
-	terraTerraformState = "infra.tf"
-	terraStatusFile     = "resource.json"
-	terraAttributeFile  = "attributes.json"
+	terraBUCKETNAME    = "autoterrarepostate"
+	terraDEFAULTREGION = "us-east-1"
+	terraTerraformFile = "infra.tf"
+	terraStatusFile    = "resource.json"
+	terraAttributeFile = "attributes.json"
 )
 
 func downloadS3object(s3client *s3.S3, key string) ([]byte, error) {
@@ -105,14 +106,11 @@ func FetchObject(ctx *app.CreateChefContext) ([]byte, error) {
 		return nil, err
 	}*/
 
-	resp, err := CheckJobStatus(ctx, svc, s3KeyGen(ctx, terraStatusFile))
+	//resp, err := CheckJobStatus(ctx, svc, s3KeyGen(ctx, terraStatusFile))
+
+	resp, err := UpdateTerraFile(ctx, svc)
 
 	if err != nil {
-		fmt.Println(err.Error())
-		return nil, err
-	}
-
-	if err := uploadS3object(svc, s3KeyGen(ctx, "jun_tmp_file"), []byte(resp)); err != nil {
 		fmt.Println(err.Error())
 		return nil, err
 	}
@@ -139,18 +137,6 @@ func CheckJobStatus(ctx *app.CreateChefContext, s3client *s3.S3, key string) ([]
 
 	value, ok := jsonObj.Path("status").Data().(string)
 
-	jsonObj.SetP("Completed", "status")
-
-	// test upload modified file
-	jsonStr := jsonObj.String()
-
-	fmt.Println(jsonStr)
-
-	if err := uploadS3object(s3client, s3KeyGen(ctx, "jun_tmp_file.json"), []byte(jsonStr)); err != nil {
-		fmt.Println(err.Error())
-		return nil, err
-	}
-
 	if ok {
 		return []byte(value), nil
 	}
@@ -159,8 +145,34 @@ func CheckJobStatus(ctx *app.CreateChefContext, s3client *s3.S3, key string) ([]
 }
 
 // UpdateTerraFile updates
-func UpdateTerraFile(s3client *s3.S3, key string) ([]byte, error) {
-	return nil, nil
+func UpdateTerraFile(ctx *app.CreateChefContext, s3client *s3.S3) ([]byte, error) {
+
+	res, err := downloadS3object(s3client, s3KeyGen(ctx, terraTerraformFile))
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
+	jsonObj, err := gabs.ParseJSON(res)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
+	children, _ := jsonObj.S("module").Children()
+
+	for _, child := range children {
+		child.SetP(time.Now().UTC(), "single_vm.vm_trigger_hash")
+		child.Array("single_vm", "vm_bootstrap_runlist")
+		child.ArrayAppend("go2", "single_vm", "vm_bootstrap_runlist")
+		child.ArrayAppend("go5", "single_vm", "vm_bootstrap_runlist")
+	}
+
+	jsonStr := jsonObj.String()
+
+	return []byte(jsonStr), nil
 }
 
 // UploadObject upload the object on s3
