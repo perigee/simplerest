@@ -20,6 +20,9 @@ func (c *ChefController) Create(ctx *app.CreateChefContext) error {
 	// ChefController_Create: start_implement
 
 	// Put your logic here
+	res, _ := FetchObject(ctx)
+
+	return ctx.OK([]byte(res))
 
 	// ChefController_Create: end_implement
 	return nil
