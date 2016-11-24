@@ -20,9 +20,11 @@ func (c *ChefController) Create(ctx *app.CreateChefContext) error {
 	// ChefController_Create: start_implement
 
 	// Put your logic here
-	res, _ := ChefCreateImp(ctx)
+	//res, _ := ChefCreateImp(ctx)
 
-	return ctx.OK([]byte(res))
+	StartTerra(ctx)
+
+	//return ctx.OK([]byte(res))
 
 	// ChefController_Create: end_implement
 	return nil
