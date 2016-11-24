@@ -83,8 +83,8 @@ func s3KeyGen(ctx *app.CreateChefContext, filename string) string {
 	return strings.Join(okey, "/")
 }
 
-// FetchObject fetch the object
-func FetchObject(ctx *app.CreateChefContext) ([]byte, error) {
+// ChefCreateImp fetch the object
+func ChefCreateImp(ctx *app.CreateChefContext) ([]byte, error) {
 	sess, err := session.NewSession()
 
 	if err != nil {
@@ -92,21 +92,6 @@ func FetchObject(ctx *app.CreateChefContext) ([]byte, error) {
 	}
 
 	svc := s3.New(sess, &aws.Config{Region: aws.String(terraDEFAULTREGION)})
-
-	/*  ===== DOWNLOAD/UPLOAD Tesitng
-	resp, err := downloadS3object(svc, s3KeyGen(ctx, terraStatusFile))
-
-	if err != nil {
-		fmt.Println(err.Error())
-		return nil, err
-	}
-
-	if err := uploadS3object(svc, s3KeyGen(ctx, "jun_tmp_file"), resp); err != nil {
-		fmt.Println(err.Error())
-		return nil, err
-	}*/
-
-	//resp, err := CheckJobStatus(ctx, svc, s3KeyGen(ctx, terraStatusFile))
 
 	resp, err := UpdateTerraFile(ctx, svc)
 
@@ -147,6 +132,8 @@ func CheckJobStatus(ctx *app.CreateChefContext, s3client *s3.S3, key string) ([]
 // UpdateTerraFile updates
 func UpdateTerraFile(ctx *app.CreateChefContext, s3client *s3.S3) ([]byte, error) {
 
+	runlist := ctx.Payload.Runlist
+
 	res, err := downloadS3object(s3client, s3KeyGen(ctx, terraTerraformFile))
 
 	if err != nil {
@@ -166,8 +153,10 @@ func UpdateTerraFile(ctx *app.CreateChefContext, s3client *s3.S3) ([]byte, error
 	for _, child := range children {
 		child.SetP(time.Now().UTC(), "single_vm.vm_trigger_hash")
 		child.Array("single_vm", "vm_bootstrap_runlist")
-		child.ArrayAppend("go2", "single_vm", "vm_bootstrap_runlist")
-		child.ArrayAppend("go5", "single_vm", "vm_bootstrap_runlist")
+
+		for _, runbook := range runlist {
+			child.ArrayAppend(runbook, "single_vm", "vm_bootstrap_runlist")
+		}
 	}
 
 	jsonStr := jsonObj.String()
