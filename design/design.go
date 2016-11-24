@@ -17,9 +17,9 @@ var ChefPayload = Type("ChefPayload", func() {
 var _ = API("provisioner", func() {
 	Title("Provisioner API")
 	Description("A provisioner for VM")
-	Host("localhost:3001")
+	Host("localhost:3000")
 	Scheme("http")
-	BasePath("/provisioner")
+	BasePath("/api/v1/provisioner")
 	Consumes("application/json")
 	Produces("application/json")
 })

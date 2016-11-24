@@ -23,7 +23,7 @@ func main() {
 	app.MountChefController(service, c)
 
 	// Start service
-	if err := service.ListenAndServe(":3001"); err != nil {
+	if err := service.ListenAndServe(":3000"); err != nil {
 		service.LogError("startup", "err", err)
 	}
 }

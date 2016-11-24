@@ -20,5 +20,5 @@ import (
 // ChefHref returns the resource href.
 func ChefHref(vmuid interface{}) string {
 	paramvmuid := strings.TrimLeftFunc(fmt.Sprintf("%v", vmuid), func(r rune) bool { return r == '/' })
-	return fmt.Sprintf("/provisioner/chef/%v", paramvmuid)
+	return fmt.Sprintf("/api/v1/provisioner/chef/%v", paramvmuid)
 }

@@ -59,8 +59,8 @@ func MountChefController(service *goa.Service, ctrl ChefController) {
 		}
 		return ctrl.Create(rctx)
 	}
-	service.Mux.Handle("POST", "/provisioner/chef", ctrl.MuxHandler("Create", h, unmarshalCreateChefPayload))
-	service.LogInfo("mount", "ctrl", "Chef", "action", "Create", "route", "POST /provisioner/chef")
+	service.Mux.Handle("POST", "/api/v1/provisioner/chef", ctrl.MuxHandler("Create", h, unmarshalCreateChefPayload))
+	service.LogInfo("mount", "ctrl", "Chef", "action", "Create", "route", "POST /api/v1/provisioner/chef")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -74,8 +74,8 @@ func MountChefController(service *goa.Service, ctrl ChefController) {
 		}
 		return ctrl.Show(rctx)
 	}
-	service.Mux.Handle("GET", "/provisioner/chef/:vmuid", ctrl.MuxHandler("Show", h, nil))
-	service.LogInfo("mount", "ctrl", "Chef", "action", "Show", "route", "GET /provisioner/chef/:vmuid")
+	service.Mux.Handle("GET", "/api/v1/provisioner/chef/:vmuid", ctrl.MuxHandler("Show", h, nil))
+	service.LogInfo("mount", "ctrl", "Chef", "action", "Show", "route", "GET /api/v1/provisioner/chef/:vmuid")
 }
 
 // unmarshalCreateChefPayload unmarshals the request body into the context request data Payload field.

@@ -1,4 +1,4 @@
-basePath: /provisioner
+basePath: /api/v1/provisioner
 consumes:
 - application/json
 definitions:
@@ -29,7 +29,7 @@ definitions:
     - runlist
     title: CreateChefPayload
     type: object
-host: localhost:3001
+host: localhost:3000
 info:
   description: A provisioner for VM
   title: Provisioner API

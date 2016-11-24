@@ -42,7 +42,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	}
 	tmp1 := new(CreateChefCommand)
 	sub = &cobra.Command{
-		Use:   `chef ["/provisioner/chef"]`,
+		Use:   `chef ["/api/v1/provisioner/chef"]`,
 		Short: ``,
 		Long: `
 
@@ -67,7 +67,7 @@ Payload example:
 	}
 	tmp2 := new(ShowChefCommand)
 	sub = &cobra.Command{
-		Use:   `chef ["/provisioner/chef/VMUID"]`,
+		Use:   `chef ["/api/v1/provisioner/chef/VMUID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
@@ -236,7 +236,7 @@ func (cmd *CreateChefCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/provisioner/chef"
+		path = "/api/v1/provisioner/chef"
 	}
 	var payload client.CreateChefPayload
 	if cmd.Payload != "" {
@@ -269,7 +269,7 @@ func (cmd *ShowChefCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/provisioner/chef/%v", cmd.Vmuid)
+		path = fmt.Sprintf("/api/v1/provisioner/chef/%v", cmd.Vmuid)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
